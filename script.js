@@ -1,184 +1,204 @@
-:root {
-    --bg-main: #0f172a;
-    --card-bg: #1e293b;
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --red: #ef4444;
-    --orange: #f97316;
-    --yellow: #eab308;
-    --green: #22c55e;
-    --border: #334155;
-}
+/**
+ * PHILIPPINE WEATHER BULLETIN - CENTRAL CONFIGURATION MODULE
+ * Edit object properties directly below to cleanly add or map dynamic engine items.
+ */
+const WEATHER_DATA_REGISTRY = {
+    telemetryMetrics: [
+        { label: "Max Current Rate", value: "24.5 mm/h", sub: "Subic Bay Station (Zambales)", isAlert: true },
+        { label: "Regional Average", value: "11.2 mm/h", sub: "Luzon Central Network", isAlert: false },
+        { label: "Reporting Stations", value: "14 / 14", sub: "Active Core Grid", isAlert: false }
+    ],
+    topographyCharts: [
+        { province: "Zambales", value: 68, percentage: 82, statusClass: "level-danger" },
+        { province: "Bataan", value: 55, percentage: 74, statusClass: "level-danger" },
+        { province: "Metro Manila", value: 32, percentage: 48, statusClass: "level-warning" },
+        { province: "Pampanga", value: 24, percentage: 39, statusClass: "level-warning" }
+    ],
+    pagasaAlerts: [
+        {
+            id: "redAlert",
+            colorClass: "color-red",
+            title: "🔴 RED WARNING",
+            pill: "Evacuate",
+            body: "<strong>Torrential Rain (&gt;30mm/h):</strong> Severe, life-threatening floods are expected in low-lying communities.",
+            meta: [
+                "Initiate immediate forced evacuation procedures.",
+                "Coordinate directly with your localized disaster units."
+            ],
+            sectors: [] // Keep empty array to simulate an alert with no sectors active
+        },
+        {
+            id: "orangeAlert",
+            colorClass: "color-orange",
+            title: "🟠 ORANGE WARNING",
+            pill: "Prepare",
+            body: "<strong>Intense Rain (15-30mm/h):</strong> Continuous downpours threaten flooding across major waterways and valleys.",
+            meta: [
+                "Be on alert for sudden flash flooding anomalies.",
+                "Prepare primary survival equipment and clear drainage pipelines."
+            ],
+            sectors: ["Zambales", "Bataan", "Cavite", "Batangas", "Occidental Mindoro"]
+        },
+        {
+            id: "yellowAlert",
+            colorClass: "color-yellow",
+            title: "🟡 YELLOW WARNING",
+            pill: "Monitor",
+            body: "<strong>Heavy Rain (7.5-15mm/h):</strong> Sustained rains introduce low-elevation road flooding and pooling risks.",
+            meta: [
+                "Track weather models for NCR and outlying provinces closely.",
+                "Expect low visibility and localized traffic stalls."
+            ],
+            sectors: ["Metro Manila", "Pangasinan", "Tarlac", "Pampanga", "Bulacan"]
+        }
+    ],
+    clearConditionsFallback: {
+        title: "🟢 NORMAL CONDITION STATUS",
+        pill: "Clear Sector",
+        body: "<strong>No Active Warnings:</strong> Atmospheric variables remain stable within safe operational parameters for this regional sector.",
+        meta: [
+            "Normal outdoor baseline workflows can proceed.",
+            "Continue normal daily operations while observing routine local forecasts."
+        ]
+    }
+};
 
-body {
-    background-color: var(--bg-main);
-    color: var(--text-main);
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    margin: 0;
-    padding: 20px;
-}
+document.addEventListener("DOMContentLoaded", () => {
+    // Dom Elements
+    const provincialDropdown = document.getElementById("provincialDropdown");
+    const workspaceGrid = document.getElementById("workspaceGrid");
+    const toggleLayoutBtn = document.getElementById("toggleLayoutBtn");
+    
+    const telemetryContainer = document.getElementById("telemetryMetricsContainer");
+    const barChartContainer = document.getElementById("barChartContainer");
+    const outputContainer = document.getElementById("outputContainer");
 
-header {
-    margin-bottom: 24px;
-    border-bottom: 2px solid var(--border);
-    padding-bottom: 16px;
-}
+    // 1. INITIAL BUILD AND RENDER PHASE
+    function initializeDashboard() {
+        // Build Telemetry Nodes
+        telemetryContainer.innerHTML = WEATHER_DATA_REGISTRY.telemetryMetrics.map(node => `
+            <div class="metric-node ${node.isAlert ? 'highlight-alert' : ''}">
+                <span class="node-label">${node.label}</span>
+                <span class="node-value">${node.value}</span>
+                <span class="node-sub">${node.sub}</span>
+            </div>
+        `).join('');
 
-header h1 { margin: 0 0 4px 0; font-size: 1.8rem; letter-spacing: 1px; }
-header p { margin: 0; color: var(--text-muted); font-size: 0.95rem; }
+        // Build Cumulative Bar Charts
+        barChartContainer.innerHTML = WEATHER_DATA_REGISTRY.topographyCharts.map(row => `
+            <div class="chart-row" data-chart-province="${row.province}">
+                <span class="chart-label">${row.province}</span>
+                <div class="chart-track"><div class="chart-fill ${row.statusClass}" style="width: ${row.percentage}%;"></div></div>
+                <span class="chart-val">${row.value}mm</span>
+            </div>
+        `).join('');
 
-.control-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: var(--card-bg);
-    padding: 12px 16px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    border: 1px solid var(--border);
-}
+        // Build PAGASA Alerts UI
+        let alertHTML = WEATHER_DATA_REGISTRY.pagasaAlerts.map(alert => {
+            const hasSectors = alert.sectors.length > 0;
+            const targetBoxContent = hasSectors 
+                ? alert.sectors.map(prov => {
+                    const extraClass = prov === "Metro Manila" ? "highlight-ncr" : (alert.colorClass === "color-orange" ? "alert-high-risk" : "");
+                    return `<span class="province-badge ${extraClass}" data-province="${prov}">${prov === "Metro Manila" ? "Metro Manila (NCR)" : prov}</span>`;
+                  }).join('')
+                : `<div class="target-box empty-notice">No regions currently under ${alert.title.split(' ')[1]} status.</div>`;
 
-.main-select {
-    background: var(--bg-main);
-    color: var(--text-main);
-    border: 1px solid var(--border);
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 0.95rem;
-}
+            return `
+                <div class="alert-banner ${alert.colorClass}" data-sectors="${alert.sectors.join(',')}">
+                    <div class="banner-header">
+                        <span>${alert.title}</span>
+                        <span class="badge-pill">${alert.pill}</span>
+                    </div>
+                    <div class="banner-body-text">${alert.body}</div>
+                    <ul class="meta-list">
+                        ${alert.meta.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                    <div class="target-box">${targetBoxContent}</div>
+                </div>
+            `;
+        }).join('');
 
-.layout-btn {
-    background: #3b82f6;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 500;
-}
+        // Embed Dynamic Green Fallback Component
+        const greenFallback = WEATHER_DATA_REGISTRY.clearConditionsFallback;
+        alertHTML += `
+            <div id="clearConditionCard" class="alert-banner color-green hidden">
+                <div class="banner-header">
+                    <span>${greenFallback.title}</span>
+                    <span class="badge-pill">${greenFallback.pill}</span>
+                </div>
+                <div class="banner-body-text">${greenFallback.body}</div>
+                <ul class="meta-list">
+                    ${greenFallback.meta.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+            </div>
+        `;
 
-.layout-btn:hover { background: #2563eb; }
+        outputContainer.innerHTML = alertHTML;
+    }
 
-.workspace {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
+    initializeDashboard();
 
-.workspace.flipped {
-    direction: rtl;
-}
-.workspace.flipped > * {
-    direction: ltr;
-}
+    // Re-cache dynamic structural nodes following assembly phase
+    const clearConditionCard = document.getElementById("clearConditionCard");
+    const alertBanners = document.querySelectorAll(".alert-banner:not(#clearConditionCard)");
+    const chartRows = document.querySelectorAll(".chart-row");
 
-@media (max-width: 900px) {
-    .workspace { grid-template-columns: 1fr; }
-    .control-bar { flex-direction: column; gap: 12px; align-items: stretch; }
-}
+    // 2. DYNAMIC REGIONAL FILTERING ENGINE
+    provincialDropdown.addEventListener("change", (e) => {
+        const selectedProvince = e.target.value;
+        let visibleAlertsCount = 0;
 
-.card {
-    background: var(--card-bg);
-    border-radius: 8px;
-    padding: 20px;
-    border: 1px solid var(--border);
-}
+        // Clear active badge highlighting states
+        document.querySelectorAll(".province-badge").forEach(badge => {
+            badge.classList.remove("active-filter");
+        });
 
-.card-header-flex {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 20px;
-}
+        if (selectedProvince === "ALL") {
+            // Restore visibility to standard structural elements
+            alertBanners.forEach(banner => banner.classList.remove("hidden"));
+            chartRows.forEach(row => row.classList.remove("hidden"));
+            clearConditionCard.classList.add("hidden");
+            return;
+        }
 
-.card-header-flex h2 { font-size: 1.2rem; margin: 0; }
+        // Filter and Highlight Alerts
+        alertBanners.forEach(banner => {
+            const sectorsData = banner.getAttribute("data-sectors") || "";
+            const sectorArray = sectorsData.split(",").filter(s => s.length > 0);
 
-.sync-tag {
-    font-size: 0.75rem;
-    padding: 4px 8px;
-    border-radius: 4px;
-    background: #475569;
-    font-weight: bold;
-}
+            if (sectorArray.includes(selectedProvince)) {
+                banner.classList.remove("hidden");
+                visibleAlertsCount++;
 
-.state-active { background: #065f46; color: #34d399; }
-.framework-badge { background: #1e3a8a; color: #93c5fd; }
+                const matchingBadge = banner.querySelector(`[data-province="${selectedProvince}"]`);
+                if (matchingBadge) {
+                    matchingBadge.classList.add("active-filter");
+                }
+            } else {
+                banner.classList.add("hidden");
+            }
+        });
 
-/* TELEMETRY METRIC NODES */
-.metrics-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 12px;
-    margin-bottom: 24px;
-}
+        // Filter 3-Hour Cumulative Volume Chart metrics dynamically
+        chartRows.forEach(row => {
+            const chartProvince = row.getAttribute("data-chart-province");
+            if (chartProvince === selectedProvince) {
+                row.classList.remove("hidden");
+            } else {
+                row.classList.add("hidden");
+            }
+        });
 
-.metric-node {
-    background: var(--bg-main);
-    padding: 12px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-}
+        // Toggle clean environment fallback state card
+        if (visibleAlertsCount === 0) {
+            clearConditionCard.classList.remove("hidden");
+        } else {
+            clearConditionCard.classList.add("hidden");
+        }
+    });
 
-.metric-node.highlight-alert {
-    border-color: var(--orange);
-}
-
-.node-label { font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 4px; text-transform: uppercase; }
-.node-value { font-size: 1.4rem; font-weight: bold; display: block; color: #fff; }
-.node-sub { font-size: 0.7rem; color: var(--text-muted); display: block; margin-top: 4px; }
-
-/* BAR CHART CORES */
-.analytics-wrapper {
-    background: var(--bg-main);
-    border-radius: 6px;
-    padding: 16px;
-    margin-bottom: 24px;
-    border: 1px solid var(--border);
-}
-
-.synopsis-title { font-size: 0.95rem; margin: 0 0 14px 0; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;}
-
-.chart-row {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    gap: 10px;
-}
-
-.chart-label { width: 95px; font-size: 0.8rem; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
-.chart-track { flex-grow: 1; background: #334155; height: 10px; border-radius: 4px; overflow: hidden; }
-.chart-fill { height: 100%; border-radius: 4px; }
-.chart-fill.level-danger { background: var(--orange); }
-.chart-fill.level-warning { background: var(--yellow); }
-.chart-val { font-size: 0.8rem; width: 45px; text-align: right; font-weight: bold; }
-
-/* OVERRIDE FOR CHART ROWS */
-.chart-row.hidden { display: none !important; }
-
-/* RE-USED DOWNSTREAM MODULE PANELS */
-.island-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.island-box { background: var(--bg-main); padding: 12px; border-radius: 6px; border-left: 3px solid #3b82f6; }
-.island-box h4 { margin: 0 0 6px 0; font-size: 0.85rem; }
-.island-text { margin: 0; font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; }
-
-.output-zone { display: flex; flex-direction: column; gap: 16px; }
-.alert-banner { padding: 16px; border-radius: 6px; border-left: 5px solid transparent; background: #0f172a; }
-.alert-banner.hidden { display: none !important; }
-
-.color-red { border-left-color: var(--red); background: rgba(239, 68, 68, 0.08); }
-.color-orange { border-left-color: var(--orange); background: rgba(249, 115, 22, 0.08); }
-.color-yellow { border-left-color: var(--yellow); background: rgba(234, 179, 8, 0.08); }
-.color-green { border-left-color: var(--green); background: rgba(34, 197, 94, 0.08); }
-
-.banner-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 0.9rem; margin-bottom: 8px; }
-.badge-pill { padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; text-transform: uppercase; background: rgba(255,255,255,0.15); }
-.banner-body-text { font-size: 0.85rem; margin-bottom: 8px; line-height: 1.4; }
-.meta-list { margin: 0; padding-left: 20px; font-size: 0.8rem; color: var(--text-muted); }
-.meta-list li { margin-bottom: 4px; }
-
-.target-box { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); }
-.empty-notice { font-size: 0.75rem; color: var(--text-muted); font-style: italic; }
-.province-badge { font-size: 0.75rem; background: #334155; padding: 2px 8px; border-radius: 4px; }
-.province-badge.alert-high-risk { background: rgba(249, 115, 22, 0.25); color: #ffedd5; border: 1px solid rgba(249, 115, 22, 0.4); }
-.province-badge.highlight-ncr { background: rgba(234, 179, 8, 0.25); color: #fef9c3; border: 1px solid rgba(234, 179, 8, 0.4); }
-.province-badge.active-filter { outline: 2px solid #fff; outline-offset: 1px; }
+    // 3. VIEWPORT WINDOW PANEL FLIPPER ACTION
+    toggleLayoutBtn.addEventListener("click", () => {
+        workspaceGrid.classList.toggle("flipped");
+    });
+});
