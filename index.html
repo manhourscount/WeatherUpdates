@@ -1,173 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Philippine Weather Bulletin & Satellite Dashboard</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Philippine Weather Bulletin & Satellite Dashboard</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header>
-        <h1>PHILIPPINE WEATHER BULLETIN</h1>
-        <p>Live Satellite Monitoring, Unified Regional Modules & Dynamic Rainfall Advisories</p>
-    </header>
+  <header>
+    <h1>PHILIPPINE WEATHER BULLETIN</h1>
+    <p>Live Satellite Monitoring, Unified Regional Modules & Dynamic Rainfall Advisories</p>
+  </header>
 
-    <!-- CONFIGURATION AND SWITCH MODULE PANEL -->
-    <section class="control-bar">
-        <div class="selector-group">
-            <label for="provincialDropdown">Target Sector Tracker:</label>
-            <select id="provincialDropdown" class="main-select">
-                <option value="ALL">-- VIEW ALL PROVINCES --</option>
-                
-                <optgroup label="Luzon Core & NCR">
-                    <option value="Bataan">Bataan</option>
-                    <option value="Batangas">Batangas</option>
-                    <option value="Bulacan">Bulacan</option>
-                    <option value="Cavite">Cavite</option>
-                    <option value="Metro Manila">NCR / Metro Manila</option>
-                    <option value="Occidental Mindoro">Occidental Mindoro</option>
-                    <option value="Pampanga">Pampanga</option>
-                    <option value="Pangasinan">Pangasinan</option>
-                    <option value="Tarlac">Tarlac</option>
-                    <option value="Zambales">Zambales</option>
-                    <option value="Other-Luzon">Other Luzon Provinces</option>
-                </optgroup>
-                
-                <optgroup label="Visayas Core">
-                    <option value="Cebu">Cebu</option>
-                    <option value="Iloilo">Iloilo</option>
-                    <option value="Leyte">Leyte</option>
-                    <option value="Samar">Samar</option>
-                    <option value="Other-Visayas">Other Visayas Provinces</option>
-                </optgroup>
-                
-                <optgroup label="Mindanao Core">
-                    <option value="Agusan">Agusan Sector</option>
-                    <option value="Davao">Davao Sector</option>
-                    <option value="Zamboanga">Zamboanga Sector</option>
-                    <option value="Other-Mindanao">Other Mindanao Provinces</option>
-                </optgroup>
-            </select>
+  <!-- CONFIGURATION AND SWITCH MODULE PANEL -->
+  <section class="control-bar">
+    <div class="selector-group">
+      <label for="provincialDropdown">Target Sector Tracker:</label>
+      <select id="provincialDropdown" class="main-select">
+        <option value="ALL">-- VIEW ALL PROVINCES --</option>
+        
+        <optgroup label="Luzon Core & NCR">
+          <option value="Bataan">Bataan</option>
+          <option value="Batangas">Batangas</option>
+          <option value="Bulacan">Bulacan</option>
+          <option value="Cavite">Cavite</option>
+          <option value="Metro Manila">NCR / Metro Manila</option>
+          <option value="Occidental Mindoro">Occidental Mindoro</option>
+          <option value="Pampanga">Pampanga</option>
+          <option value="Pangasinan">Pangasinan</option>
+          <option value="Tarlac">Tarlac</option>
+          <option value="Zambales">Zambales</option>
+          <option value="Other-Luzon">Other Luzon Provinces</option>
+        </optgroup>
+        
+        <optgroup label="Visayas Core">
+          <option value="Cebu">Cebu</option>
+          <option value="Iloilo">Iloilo</option>
+          <option value="Leyte">Leyte</option>
+          <option value="Samar">Samar</option>
+          <option value="Other-Visayas">Other Visayas Provinces</option>
+        </optgroup>
+        
+        <optgroup label="Mindanao Core">
+          <option value="Agusan">Agusan Sector</option>
+          <option value="Davao">Davao Sector</option>
+          <option value="Zamboanga">Zamboanga Sector</option>
+          <option value="Other-Mindanao">Other Mindanao Provinces</option>
+        </optgroup>
+      </select>
+    </div>
+    <button id="toggleLayoutBtn" class="layout-btn">Swap Window 🔄 Panels</button>
+  </section>
+
+  <!-- MAIN DYNAMIC WORKSPACE GRID -->
+  <main id="workspaceGrid" class="workspace split-view">
+
+    <!-- LEFT COMPONENT: HIGH-AVAILABILITY ZOOM EARTH SATELLITE CANVAS -->
+    <section class="card">
+      <div class="card-header-flex">
+        <h2>JMA Himawari Live Satellite Imagery (Interactive Loop)</h2>
+        <span id="syncTracker" class="sync-tag">Syncing Loop Data...</span>
+      </div>
+      
+      <div class="satellite-image-container">
+        <!-- Embedded high-resolution Zoom Earth tracker streaming active Himawari-9 layers safely -->
+        <iframe src="https://zoom.earth" title="Live Weather Map Philippine Area of Responsibility" allowfullscreen></iframe>
+      </div>
+
+      <!-- Island Thunderstorm Synopses -->
+      <div class="synopsis-wrapper">
+        <h3 class="synopsis-title">Regional Synopses</h3>
+        <div class="island-grid">
+          <div class="island-box">
+            <h4>Luzon Island & NCR ⚡</h4>
+            <p class="island-text">Active Southwest Monsoon (Habagat). Expect persistent heavy rainfall, convective cloud clustering, and thunderstorm advisories across Metro Manila and surrounding western seaboards.</p>
+          </div>
+          <div class="island-box">
+            <h4>Visayas & Mindanao ⚡</h4>
+            <p class="island-text">Generally fair weather conditions punctuated by localized short-duration afternoon thunderstorm breakouts.</p>
+          </div>
         </div>
-
-        <button id="toggleLayoutBtn" class="layout-btn">🔄 Swap Window Panels</button>
+      </div>
     </section>
 
-    <!-- MAIN DYNAMIC WORKSPACE GRID -->
-    <main id="workspaceGrid" class="workspace split-view">
-        
-        <!-- LEFT COMPONENT: HIGH-AVAILABILITY ZOOM EARTH SATELLITE CANVAS -->
-        <section class="card">
-    <div class="card-header-flex">
-        <h2>JMA Himawari Live Satellite Imagery (Interactive Link)</h2>
-        <span id="syncTracker" class="sync-tag">View Active Loop</span>
-    </div>
-    
-    <div class="satellite-image-container">
-        <!-- Clicking the preview image securely directs the user to the live tracker -->
-        <a href="https://zoom.earth" target="_blank" rel="noopener noreferrer">
-            <img src="philippines-satellite-placeholder.jpg" alt="Live Weather Map Philippine Area of Responsibility" style="width:100%; height:auto; display:block;">
-            <p style="text-align:center; padding:10px; margin:0; background:#f4f4f4;">Click to open real-time interactive Zoom Earth Map</p>
-        </a>
-    </div>
-</section>
+    <!-- RIGHT COMPONENT: METRIC RAINFALL ALERT OBJECTS -->
+    <section class="card">
+      <div class="card-header-flex">
+        <h2>Rainfall Risk Alerts</h2>
+        <span class="sync-tag framework-badge">PAGASA Framework</span>
+      </div>
 
-            <!-- Island Thunderstorm Synopses -->
-            <div class="synopsis-wrapper">
-                <h3 class="synopsis-title">Regional Synopses</h3>
-                <div class="island-grid">
-                    <div class="island-box">
-                        <h4>⚡ Luzon Island & NCR</h4>
-                        <p class="island-text">Active Southwest Monsoon (Habagat). Expect persistent heavy rainfall, convective cloud clustering, and thunderstorm advisories across Metro Manila and surrounding western seaboards.</p>
-                    </div>
-                    <div class="island-box">
-                        <h4>⚡ Visayas & Mindanao</h4>
-                        <p class="island-text">Generally fair weather conditions punctuated by localized short-duration afternoon thunderstorm breakouts.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+      <div id="outputContainer" class="output-zone">
+        <!-- Red Alert Block -->
+        <div class="alert-banner color-red" data-sector="none">
+          <div class="banner-header">
+            <span>RED WARNING 🔴</span>
+            <span class="badge-pill">Evacuate</span>
+          </div>
+          <div class="banner-body-text"><strong>Torrential Rain (&gt;30mm/h):</strong> Severe, life-threatening floods are expected in low-lying communities.</div>
+          <ul class="meta-list">
+            <li>Take immediate emergency safety actions.</li>
+            <li>Coordinate directly with local MDRRMC units.</li>
+          </ul>
+        </div>
 
-        <!-- RIGHT COMPONENT: METRIC RAINFALL ALERT OBJECTS -->
-        <section class="card">
-            <div class="card-header-flex">
-                <h2>Rainfall Risk Alerts</h2>
-                <span class="sync-tag framework-badge">PAGASA Framework</span>
-            </div>
+        <!-- Orange Alert Block -->
+        <div class="alert-banner color-orange" data-sector="Zambales, Bataan, Cavite, Batangas, Occidental Mindoro">
+          <div class="banner-header">
+            <span>🟠 ORANGE WARNING</span>
+            <span class="badge-pill">Prepare</span>
+          </div>
+          <div class="banner-body-text"><strong>Intense Rain (15-30mm/h):</strong> Continuous downpours due to Habagat threaten severe flooding across major waterways and low-lying sectors.</div>
+          <ul class="meta-list">
+            <li>Be on high alert for immediate localized evacuation.</li>
+            <li>Secure essential survival equipment and clear drainage nodes.</li>
+          </ul>
+          <div class="target-box">
+            <span class="province-badge alert-high-risk">Zambales</span>
+            <span class="province-badge alert-high-risk">Bataan</span>
+            <span class="province-badge alert-high-risk">Cavite</span>
+            <span class="province-badge alert-high-risk">Batangas</span>
+            <span class="province-badge alert-high-risk">Occidental Mindoro</span>
+          </div>
+        </div>
 
-            <div id="outputContainer" class="output-zone">
-                <!-- Red Alert Block -->
-                <div class="alert-banner color-red" data-sector="none">
-                    <div class="banner-header">
-                        <span>🔴 RED WARNING</span>
-                        <span class="badge-pill">Evacuate</span>
-                    </div>
-                    <div class="banner-body-text"><strong>Torrential Rain (&gt;30mm/h):</strong> Severe, life-threatening floods are expected in low-lying communities.</div>
-                    <ul class="meta-list">
-                        <li>Take immediate emergency safety actions.</li>
-                        <li>Coordinate directly with local MDRRMC units.</li>
-                    </ul>
-                </div>
+        <!-- Yellow Alert Block -->
+        <div class="alert-banner color-yellow" data-sector="Metro Manila, Pangasinan, Tarlac, Pampanga, Bulacan">
+          <div class="banner-header">
+            <span>YELLOW WARNING</span>
+            <span class="badge-pill">Monitor</span>
+          </div>
+          <div class="banner-body-text"><strong>Heavy Rain (7.5-15mm/h):</strong> Persistent heavy rainfall threatens localized urban flooding in low-altitude and poorly drained hubs.</div>
+          <ul class="meta-list">
+            <li>Monitor real-time weather feeds for NCR and adjacent valleys constantly.</li>
+            <li>Expect waterlogged streets and low visibility during commutes.</li>
+          </ul>
+          <div class="target-box">
+            <span class="province-badge highlight-ncr">Metro Manila (NCR)</span>
+            <span class="province-badge">Pangasinan</span>
+            <span class="province-badge">Tarlac</span>
+            <span class="province-badge">Pampanga</span>
+            <span class="province-badge">Bulacan</span>
+          </div>
+        </div>
 
-                <!-- Orange Alert Block -->
-                <div class="alert-banner color-orange" data-sector="Zambales, Bataan, Cavite, Batangas, Occidental Mindoro">
-                    <div class="banner-header">
-                        <span>🟠 ORANGE WARNING</span>
-                        <span class="badge-pill">Prepare</span>
-                    </div>
-                    <div class="banner-body-text"><strong>Intense Rain (15-30mm/h):</strong> Continuous downpours due to Habagat threaten severe flooding across major waterways and low-lying sectors.</div>
-                    <ul class="meta-list">
-                        <li>Be on high alert for immediate localized evacuation.</li>
-                        <li>Secure essential survival equipment and clear drainage nodes.</li>
-                    </ul>
-                    <div class="target-box">
-                        <span class="province-badge alert-high-risk">Zambales</span>
-                        <span class="province-badge alert-high-risk">Bataan</span>
-                        <span class="province-badge alert-high-risk">Cavite</span>
-                        <span class="province-badge alert-high-risk">Batangas</span>
-                        <span class="province-badge alert-high-risk">Occidental Mindoro</span>
-                    </div>
-                </div>
+        <!-- Green Safe Dynamic Block -->
+        <div id="clearConditionCard" class="alert-banner color-green hidden">
+          <div class="banner-header">
+            <span>NORMAL CONDITION STATUS</span>
+            <span class="badge-pill">Clear Sector</span>
+          </div>
+          <div class="banner-body-text">The selected sector is currently free of targeted, severe color-coded emergency flood tracking frameworks. Standard localized monsoonal precautions apply.</div>
+        </div>
+      </div>
 
-                <!-- Yellow Alert Block -->
-                <div class="alert-banner color-yellow" data-sector="Metro Manila, Pangasinan, Tarlac, Pampanga, Bulacan">
-                    <div class="banner-header">
-                        <span>🟡 YELLOW WARNING</span>
-                        <span class="badge-pill">Monitor</span>
-                    </div>
-                    <div class="banner-body-text"><strong>Heavy Rain (7.5-15mm/h):</strong> Persistent heavy rainfall threatens localized urban flooding in low-altitude and poorly drained hubs.</div>
-                    <ul class="meta-list">
-                        <li>Monitor real-time weather feeds for NCR and adjacent valleys constantly.</li>
-                        <li>Expect waterlogged streets and low visibility during commutes.</li>
-                    </ul>
-                    <div class="target-box">
-                        <span class="province-badge highlight-ncr">Metro Manila (NCR)</span>
-                        <span class="province-badge">Pangasinan</span>
-                        <span class="province-badge">Tarlac</span>
-                        <span class="province-badge">Pampanga</span>
-                        <span class="province-badge">Bulacan</span>
-                    </div>
-                </div>
+      <!-- External Government Feed Channels -->
+      <div class="links-flex">
+        <a href="https://dost.gov.ph" target="_blank" rel="noopener" class="ext-btn">PAGASA Portal</a>
+        <a href="https://panahon.gov.ph" target="_blank" rel="noopener" class="ext-btn">Panahon Hydromet</a>
+      </div>
+    </section>
 
-                <!-- Green Safe Dynamic Block -->
-                <div id="clearConditionCard" class="alert-banner color-green hidden">
-                    <div class="banner-header">
-                        <span>🟢 NORMAL CONDITION STATUS</span>
-                        <span class="badge-pill">Clear Sector</span>
-                    </div>
-                    <div class="banner-body-text">The selected sector is currently free of targeted, severe color-coded emergency flood tracking frameworks. Standard localized monsoonal precautions apply.</div>
-                </div>
-            </div>
+  </main>
 
-            <!-- External Government Feed Channels -->
-            <div class="links-flex">
-                <a href="https://www.pagasa.dost.gov.ph/weather" target="_blank" rel="noopener" class="ext-btn">PAGASA Portal</a>
-                <a href="https://panahon.gov.ph" target="_blank" rel="noopener" class="ext-btn">Panahon Hydromet</a>
-            </div>
-        </section>
-    </main>
-
-    <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
