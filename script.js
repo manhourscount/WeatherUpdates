@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const clearConditionCard = document.getElementById('clearConditionCard');
     const alertBanners = document.querySelectorAll('.alert-banner:not(#clearConditionCard)');
 
-    // --- 1. Dropdown Target Filter Logic ---
+    // --- 1. Dropdown Filter Engine ---
     dropdown.addEventListener('change', function() {
         const selection = this.value;
         localStorage.setItem('activeWeatherProvince', selection);
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- 2. Panel Axis Viewport Toggle Logic ---
+    // --- 2. Panel Grid Orientation Switcher ---
     toggleLayoutBtn.addEventListener('click', () => {
         if (workspaceGrid.classList.contains('split-view')) {
             workspaceGrid.classList.remove('split-view');
@@ -47,10 +47,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- 3. Synchronized State Logger ---
-    syncTracker.innerText = "🟢 Satellite Stream Online";
+    // --- 3. Map Node Handshake Logger ---
+    syncTracker.innerText = "🟢 Map Core Live";
 
-    // --- 4. Persistent App State Initializer ---
+    // --- 4. Web Storage Initializer ---
     const rememberedState = localStorage.getItem('activeWeatherProvince');
     if (rememberedState) {
         dropdown.value = rememberedState;
