@@ -59,15 +59,19 @@
         
         <!-- LEFT COMPONENT: HIGH-AVAILABILITY ZOOM EARTH SATELLITE CANVAS -->
         <section class="card">
-            <div class="card-header-flex">
-                <h2>JMA Himawari Live Satellite Imagery (Interactive Loop)</h2>
-                <span id="syncTracker" class="sync-tag">Syncing Loop Data...</span>
-            </div>
-            
-            <div class="satellite-image-container">
-                <!-- Embedded high-resolution Zoom Earth tracker streaming active Himawari-9 layers safely -->
-                <iframe src="https://zoom.earth" title="Live Weather Map Philippine Area of Responsibility" allowfullscreen></iframe>
-            </div>
+    <div class="card-header-flex">
+        <h2>JMA Himawari Live Satellite Imagery (Interactive Link)</h2>
+        <span id="syncTracker" class="sync-tag">View Active Loop</span>
+    </div>
+    
+    <div class="satellite-image-container">
+        <!-- Clicking the preview image securely directs the user to the live tracker -->
+        <a href="https://zoom.earth" target="_blank" rel="noopener noreferrer">
+            <img src="philippines-satellite-placeholder.jpg" alt="Live Weather Map Philippine Area of Responsibility" style="width:100%; height:auto; display:block;">
+            <p style="text-align:center; padding:10px; margin:0; background:#f4f4f4;">Click to open real-time interactive Zoom Earth Map</p>
+        </a>
+    </div>
+</section>
 
             <!-- Island Thunderstorm Synopses -->
             <div class="synopsis-wrapper">
